@@ -25,7 +25,7 @@
 # ignoring those ignore by git (through the .gitignore)
 
 GITIGNORE=$(git ls | grep -m1 .gitignore)
-if [ -n ${GITIGNORE} ]
+if [ -n "${GITIGNORE}" ]
 then
     GITIGNORE_PATH=$(echo $(cd $(dirname ${GITIGNORE}); pwd)/$(basename ${GITIGNORE}))
     tree -I $(grep -vE '^\s*(#|$)' ${GITIGNORE_PATH} | paste -s -d'|' -)
