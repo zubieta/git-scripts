@@ -24,7 +24,7 @@
 # List the files and folders of the current directory with the tree command
 # ignoring those ignore by git (through the .gitignore)
 
-GITIGNORE=$(git ls | grep -m1 .gitignore)
+GITIGNORE=$(git ls | grep -m1 .gitignore || find . -maxdepth 1 -name .gitignore)
 if [ -n "${GITIGNORE}" ]
 then
     GITIGNORE_PATH=$(echo $(cd $(dirname ${GITIGNORE}); pwd)/$(basename ${GITIGNORE}))
