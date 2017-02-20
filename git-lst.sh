@@ -28,7 +28,7 @@ GITIGNORE=$(git ls | grep -m1 .gitignore || find . -maxdepth 1 -name .gitignore)
 if [ -n "${GITIGNORE}" ]
 then
     GITIGNORE_PATH=$(echo $(cd $(dirname ${GITIGNORE}); pwd)/$(basename ${GITIGNORE}))
-    tree -I $(grep -vE '^\s*(#|$)' ${GITIGNORE_PATH} | paste -s -d'|' -) $@
+    tree -I $(echo '.git' | grep -vhE '^\s*(#|$)' ${GITIGNORE_PATH} - | paste -s -d'|' -) $@
 else
-    tree $@
+    tree -I '.git' $@
 fi
