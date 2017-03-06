@@ -24,11 +24,19 @@
 # List the files and folders of the current directory with the tree command
 # ignoring those ignore by git (through the .gitignore)
 
-GITIGNORE=$(git ls | grep -m1 .gitignore || find . -maxdepth 1 -name .gitignore)
-if [ -n "${GITIGNORE}" ]
+# Check if we are in a git repo
+git status >/dev/null
+ERROR=$?
+if [ $ERROR -ne 0 ]
 then
-    GITIGNORE_PATH=$(echo $(cd $(dirname ${GITIGNORE}); pwd)/$(basename ${GITIGNORE}))
-    tree -I $(echo '.git' | grep -vhE '^\s*(#|$)' ${GITIGNORE_PATH} - | paste -s -d'|' -) $@
+    # Exit with same error code if we are not
+    exit $ERROR
 else
-    tree -I '.git' $@
+    # Find .gitignore
+    GITIGNORE=$(git ls | grep -m1 .gitignore || find . -maxdepth 1 -name .gitignore)
+    if [ -n "${GITIGNORE}" ]
+    then
+        GITIGNORE_PATH=$(echo $(cd $(dirname ${GITIGNORE}); pwd)/$(basename ${GITIGNORE}))
+    fi
+    tree -I $(echo '.git' | grep -vhE '^\s*(#|$)' ${GITIGNORE_PATH} - | paste -s -d'|' -) $@
 fi
