@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # MIT License
-# 
+#
 # Copyright (c) 2017 Carlos Zubieta
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,16 +27,17 @@
 # Check if we are in a git repo
 git status >/dev/null
 ERROR=$?
-if [ $ERROR -ne 0 ]
-then
+if [ $ERROR -ne 0 ]; then
     # Exit with same error code if we are not
     exit $ERROR
 else
     # Find .gitignore
     GITIGNORE=$(git ls | grep -m1 .gitignore || find . -maxdepth 1 -name .gitignore)
-    if [ -n "${GITIGNORE}" ]
-    then
-        GITIGNORE_PATH=$(echo $(cd $(dirname ${GITIGNORE}); pwd)/$(basename ${GITIGNORE}))
+    if [ -n "${GITIGNORE}" ]; then
+        GITIGNORE_PATH="$(
+            cd "$(dirname "$GITIGNORE")" || exit
+            pwd
+        )/$(basename "$GITIGNORE")"
     fi
-    tree -I $(echo '.git' | grep -vhE '^\s*(#|$)' ${GITIGNORE_PATH} - | paste -s -d'|' -) $@
+    tree -I "$(echo '.git' | grep -vhE '^\s*(#|$)' "$GITIGNORE_PATH" - | paste -s -d'|' -)" "$@"
 fi
