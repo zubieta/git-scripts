@@ -39,5 +39,5 @@ else
             pwd
         )/$(basename "$GITIGNORE")"
     fi
-    tree -I "$(echo '.git' | grep -vhE '^\s*(#|$)' "$GITIGNORE_PATH" - | paste -s -d'|' -)" "$@"
+    tree -I "$(echo '.git' | grep -svhE '^\s*(#|$)' "$GITIGNORE_PATH" - | paste -s -d'|' -)" "$@"
 fi
